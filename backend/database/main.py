@@ -1,9 +1,12 @@
-from sqlalchemy.orm import Session
-from . import crud, models, schemas
-from .database import SessionLocal, engine
 import bcrypt
+from sqlalchemy.orm import Session
 
-models.Base.metadata.create_all(bind=engine)
+from backend.models import NoteCreate, UserCreate
+
+from . import crud, database_models
+from .database import SessionLocal, engine
+
+database_models.Base.metadata.create_all(bind=engine)
 
 
 def get_db():
@@ -24,7 +27,39 @@ async def verify_user(username: str, password: str, db: Session):
         return False
     return db_user
 
+
 async def create_user(username: str, password: str, db: Session):
-    to_create = schemas.UserCreate(username=username, password=password)
+    to_create = UserCreate(username=username, password=password)
     db_user = crud.create_user(db, to_create)
     return db_user
+
+
+async def get_note(note_id: int, username: str, db: Session):
+    db_note = crud.get_note_by_id(db, note_id)
+    if db_note is None:
+        return None
+    if db_note.owner.username != username:
+        return None
+    return db_note
+
+
+async def get_user_notes(username: str, db: Session):
+    db_user_notes = crud.get_user_notes(db, crud.get_user_by_username(db, username))
+    return db_user_notes
+
+
+async def create_note(username: str, title: str, text: str, db: Session):
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        return None
+    db_note = crud.create_note(db, NoteCreate(title=title, text=text), db_user)
+    return db_note
+
+
+async def delete_note(note_id: int, username: str, db: Session):
+    db_note = crud.get_note_by_id(db, note_id)
+    if db_note is None:
+        return None
+    if db_note.owner.username != username:
+        return None
+    return crud.delete_note(db, db_note)

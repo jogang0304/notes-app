@@ -1,8 +1,11 @@
 import datetime
-from typing import Optional
-import jwt
 from os import getenv
+from typing import Optional
+
+import jwt
+
 from backend.models import Token
+
 
 class JWTHelper:
     def __init__(self) -> None:
@@ -11,9 +14,11 @@ class JWTHelper:
     @staticmethod
     def create(username: str) -> str:
         secret = getenv("JWT_SECRET")
+        expire_time = datetime.datetime.now() + datetime.timedelta(hours=1)
         token = jwt.encode(
             Token(
-                username=username, expires=int(datetime.datetime.now().timestamp()) + 1000
+                username=username,
+                expires=int(expire_time.timestamp()),
             ).model_dump(),
             secret,
             algorithm="HS256",

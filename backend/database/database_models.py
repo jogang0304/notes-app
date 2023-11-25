@@ -4,17 +4,17 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-class User(Base):
+class UserModel(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
 
-    notes = relationship("Note", back_populates="owner")
+    notes = relationship("NoteModel", back_populates="owner")
 
 
-class Note(Base):
+class NoteModel(Base):
     __tablename__ = "notes"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -22,4 +22,4 @@ class Note(Base):
     text = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="notes")
+    owner = relationship("UserModel", back_populates="notes")

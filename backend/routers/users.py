@@ -1,13 +1,9 @@
-import token
-from typing import Optional, Annotated
-from fastapi import APIRouter, Depends, Form
-from pydantic import BaseModel
-from backend.database.schemas import UserCreate
+from typing import Annotated
 
+from fastapi import APIRouter, Depends, Form, HTTPException
+
+import backend.database as database
 from backend.helpers.jwt import JWTHelper
-from backend.database import *
-
-from backend.models import *
 
 router = APIRouter()
 
@@ -17,39 +13,39 @@ async def read_root():
     return {"Hello": "World"}
 
 
-@router.post("/register/")
+@router.post("/register/", response_model=str)
 async def register_user(
     username: Annotated[str, Form()],
     password: Annotated[str, Form()],
-    db: Session = Depends(get_db),
+    db: database.Session = Depends(database.get_db),
 ):
-    db_user = await create_user(username, password, db)
+    db_user = await database.create_user(username, password, db)
     if not db_user:
-        return {"error": "User already exists"}
+        raise HTTPException(status_code=400, detail="User already exists")
     token = JWTHelper.create(username)
     return token
 
 
-@router.post("/login/")
+@router.post("/login/", response_model=str)
 async def login_user(
     username: Annotated[str, Form()],
     password: Annotated[str, Form()],
-    db: Session = Depends(get_db),
+    db: database.Session = Depends(database.get_db),
 ):
-    db_user = await verify_user(username, password, db)
+    db_user = await database.verify_user(username, password, db)
     if not db_user:
-        return {"error": "Invalid Credentials"}
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     token = JWTHelper.create(username)
-    return {"success": token}
+    return token
 
 
-@router.post("/renew/")
+@router.post("/renew/", response_model=str)
 async def renew_token(token: Annotated[str, Form()]):
     try:
         token_data = JWTHelper.verify(token)
     except:
-        return {"error": "Invalid Token"}
+        raise HTTPException(status_code=400, detail="Invalid token")
     if token_data is None:
-        return {"error": "Invalid Token"}
+        raise HTTPException(status_code=400, detail="Invalid token")
     new_token = JWTHelper.create(token_data.username)
-    return {"success": new_token}
+    return new_token
