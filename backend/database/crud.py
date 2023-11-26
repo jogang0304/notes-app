@@ -1,7 +1,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from backend.models import NoteCreate, User, UserCreate
+from backend.models import Note, NoteCreate, User, UserCreate
 
 from . import database_models
 
@@ -58,6 +58,21 @@ def create_note(db: Session, note: NoteCreate, user: User):
     db_item = database_models.NoteModel(**note.model_dump(), owner_id=user.id)
     db.add(db_item)
     db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
+def change_note(db: Session, note: Note, user: User):
+    db.query(database_models.NoteModel).filter(
+        database_models.NoteModel.id == note.id
+    ).update(
+        {
+            database_models.NoteModel.title: note.title,
+            database_models.NoteModel.text: note.text,
+        }
+    )
+    db.commit()
+    db_item = get_note_by_id(db, note.id)
     db.refresh(db_item)
     return db_item
 

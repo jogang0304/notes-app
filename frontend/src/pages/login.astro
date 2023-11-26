@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Login from "../components/Login/Login";
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<Login client:only />
+	</main>
+</Layout>

@@ -1,3 +1,4 @@
+import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Header, HTTPException
@@ -72,3 +73,30 @@ async def delete_note(
     if note is None:
         raise HTTPException(status_code=404, detail="Invalid id or username")
     return note
+
+
+@router.post("/change/", response_model=Note)
+async def change_note(
+    token: Annotated[str, Header()],
+    note_bytes: Annotated[bytes, Form()],
+    db: database.Session = Depends(database.get_db),
+):
+    verified_token = JWTHelper().verify(token)
+    if verified_token is None:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    try:
+        note = Note(**json.loads(note_bytes.decode("utf-8")))
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid json") from None
+    except:
+        raise HTTPException(
+            status_code=400, detail="Unknown error changing note"
+        ) from None
+    changed_note = await database.change_note(
+        note,
+        verified_token.username,
+        db,
+    )
+    if changed_note is None:
+        raise HTTPException(status_code=404, detail="Invalid note id or username")
+    return changed_note

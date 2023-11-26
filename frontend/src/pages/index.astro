@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MainScreen from "../components/MainScreen.tsx";
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<MainScreen client:only/>
+	</main>
+</Layout>

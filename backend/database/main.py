@@ -1,7 +1,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from backend.models import NoteCreate, UserCreate
+from backend.models import Note, NoteCreate, UserCreate
 
 from . import crud, database_models
 from .database import SessionLocal, engine
@@ -63,3 +63,13 @@ async def delete_note(note_id: int, username: str, db: Session):
     if db_note.owner.username != username:
         return None
     return crud.delete_note(db, db_note)
+
+
+async def change_note(note: Note, username: str, db: Session):
+    db_note = crud.get_note_by_id(db, note.id)
+    if db_note is None or db_note.owner.username != username:
+        return None
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None or note.owner_id != db_user.id:
+        return None
+    return crud.change_note(db, note, db_user)

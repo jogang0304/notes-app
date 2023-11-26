@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Register from "../components/Register.tsx";
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<Register client:only />
+	</main>
+</Layout>
