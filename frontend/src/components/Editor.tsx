@@ -24,21 +24,34 @@ import {
 import { Box, Container, Paper, Stack } from "@mui/material";
 import Item from "@mui/material/Stack";
 import type { Note } from "../interfaces";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-function SaveButton({
-  editor_ref,
-  initialNote,
-  setNotes,
+function Editor({
+  notes,
   currentNoteIndex,
+  setNotes,
 }: {
-  editor_ref: React.RefObject<MDXEditorMethods>;
-  initialNote: Note;
+  notes: Note[];
   currentNoteIndex: number;
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
 }) {
+  if (notes.length === 0) {
+    return <Paper></Paper>;
+  }
+  const note = notes[currentNoteIndex];
+  const [currentText, setCurrentText] = useState<string>(`${note.text}`);
+  const editor_ref = useRef<MDXEditorMethods>(null);
+  useEffect(() => {
+    editor_ref.current?.setMarkdown(`${note.text}`);
+  }, [localStorage.getItem("currentNoteIndex")]);
+
   function changeNote() {
+    console.log(localStorage.getItem("currentNoteIndex") ?? "0");
+    console.log(notes);
+    const initialNote =
+      notes[parseInt(localStorage.getItem("currentNoteIndex") ?? "0")];
+    console.log(initialNote);
     let token = localStorage.getItem("token");
     const note = editor_ref.current?.getMarkdown();
     if (note === undefined) {
@@ -51,8 +64,6 @@ function SaveButton({
       text: note,
       owner_id: initialNote.owner_id,
     };
-    console.log(currentNoteIndex);
-    console.log(newNote);
     const form = new FormData();
     form.append("note_json", JSON.stringify(newNote));
     axios
@@ -72,27 +83,6 @@ function SaveButton({
       });
   }
 
-  return <Button onClick={changeNote}>Save</Button>;
-}
-
-function Editor({
-  notes,
-  currentNoteIndex,
-  setNotes,
-}: {
-  notes: Note[];
-  currentNoteIndex: number;
-  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
-}) {
-  if (notes.length === 0) {
-    return <Paper></Paper>;
-  }
-  const note = notes[currentNoteIndex];
-  const [currentText, setCurrentText] = useState<string>(`${note.text}`);
-  const editor_ref = useRef<MDXEditorMethods>(null);
-  useEffect(() => {
-    editor_ref.current?.setMarkdown(`${note.text}`);
-  }, [currentNoteIndex]);
   return (
     <Box height={"100%"}>
       <Paper sx={{ height: "100%" }}>
@@ -118,12 +108,7 @@ function Editor({
                     <InsertCodeBlock />
                   </Item>
                   <Item>
-                    <SaveButton
-                      editor_ref={editor_ref}
-                      initialNote={notes[currentNoteIndex]}
-                      setNotes={setNotes}
-                      currentNoteIndex={currentNoteIndex}
-                    />
+                    <Button onClick={changeNote}>Save</Button>
                   </Item>
                 </Stack>
               ),
