@@ -1,13 +1,9 @@
 import "@mdxeditor/editor/style.css";
 import {
   BoldItalicUnderlineToggles,
-  ChangeCodeMirrorLanguage,
-  ConditionalContents,
   InsertCodeBlock,
-  InsertSandpack,
   InsertTable,
   MDXEditor,
-  ShowSandpackInfo,
   UndoRedo,
   codeBlockPlugin,
   codeMirrorPlugin,
@@ -21,7 +17,7 @@ import {
   type MDXEditorMethods,
   Button,
 } from "@mdxeditor/editor";
-import { Box, Container, Paper, Stack } from "@mui/material";
+import { Box, Paper, Stack } from "@mui/material";
 import Item from "@mui/material/Stack";
 import type { Note } from "../interfaces";
 import React, { useEffect, useRef, useState } from "react";
@@ -37,7 +33,11 @@ function Editor({
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
 }) {
   if (notes.length === 0) {
-    return <Paper></Paper>;
+    return (
+      <Box height={"100%"}>
+        <Paper elevation={5} sx={{ height: "100%" }}></Paper>
+      </Box>
+    );
   }
   const note = notes[currentNoteIndex];
   const [currentText, setCurrentText] = useState<string>(`${note.text}`);
@@ -85,7 +85,7 @@ function Editor({
 
   return (
     <Box height={"100%"}>
-      <Paper sx={{ height: "100%" }}>
+      <Paper sx={{ height: "100%" }} elevation={5}>
         <MDXEditor
           ref={editor_ref}
           markdown="# Hello World"

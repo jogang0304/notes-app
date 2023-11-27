@@ -1,7 +1,7 @@
 import { Grid, Stack } from "@mui/material";
 import Item from "@mui/material/Stack";
 import User from "./User";
-import TaskList from "./TaskList";
+import TaskList from "./NotesList";
 import Editor from "./Editor";
 import { useEffect, useState } from "react";
 import axios from "axios";

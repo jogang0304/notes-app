@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 function User({ username }: { username: string }) {
   return (
-    <Paper>
+    <Paper elevation={5}>
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem />}
