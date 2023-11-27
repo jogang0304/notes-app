@@ -78,14 +78,14 @@ async def delete_note(
 @router.post("/change/", response_model=Note)
 async def change_note(
     token: Annotated[str, Header()],
-    note_bytes: Annotated[bytes, Form()],
+    note_json: Annotated[str, Form()],
     db: database.Session = Depends(database.get_db),
 ):
     verified_token = JWTHelper().verify(token)
     if verified_token is None:
         raise HTTPException(status_code=400, detail="Invalid token")
     try:
-        note = Note(**json.loads(note_bytes.decode("utf-8")))
+        note = Note(**json.loads(note_json))
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid json") from None
     except:

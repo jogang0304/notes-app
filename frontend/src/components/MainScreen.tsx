@@ -52,11 +52,11 @@ function MainScreen() {
   return (
     <Grid container sx={{ height: "100vh" }} spacing={1} padding={1}>
       <Grid item xs={3}>
-        <Stack spacing={1}>
+        <Stack spacing={1} height={"100%"}>
           <Item>
             <User username={username} />
           </Item>
-          <Item>
+          <Item height={"100%"}>
             <TaskList
               notes={notes}
               setNotes={setNotes}
@@ -67,7 +67,11 @@ function MainScreen() {
         </Stack>
       </Grid>
       <Grid item xs={9}>
-        <Editor notes={notes} currentNoteIndex={currentNoteIndex} />
+        <Editor
+          notes={notes}
+          currentNoteIndex={currentNoteIndex}
+          setNotes={setNotes}
+        />
       </Grid>
     </Grid>
   );

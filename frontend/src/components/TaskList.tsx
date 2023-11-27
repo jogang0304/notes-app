@@ -1,7 +1,15 @@
 import axios from "axios";
 import { useEffect } from "react";
 import type { Note } from "../interfaces";
-import { Button, Stack } from "@mui/material";
+import {
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Stack,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Item from "@mui/material/Stack";
 
@@ -47,21 +55,24 @@ function TaskList({
   }, []);
 
   return (
-    <Paper>
-      <Stack>
+    <Paper sx={{ height: "100%" }}>
+      <List>
         {notes.map((note, index) => (
-          <Item key={index} margin={1}>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setCurrentNoteIndex(index);
-              }}
-            >
-              {note.title}
-            </Button>
-          </Item>
+          <>
+            <ListItem key={note.id} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  setCurrentNoteIndex(index);
+                  console.log(currentNoteIndex);
+                }}
+              >
+                <ListItemText primary={note.title} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </>
         ))}
-      </Stack>
+      </List>
     </Paper>
   );
 }

@@ -1,5 +1,6 @@
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Button, Divider, Paper, Stack } from "@mui/material";
+import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
+import Container from "@mui/material/Container";
 import Item from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 
@@ -9,12 +10,16 @@ function User({ username }: { username: string }) {
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem />}
-        spacing={2}
+        spacing={0}
         height="5vh"
-        padding={2}
+        alignItems={"center"}
       >
-        <Item>{username}</Item>
-        <Item width={"fit-content"}>
+        <Item width={"100%"}>
+          <Container>
+            <Typography textAlign={"center"}>{username}</Typography>
+          </Container>
+        </Item>
+        <Item>
           <Button
             onClick={() => {
               localStorage.removeItem("token");
