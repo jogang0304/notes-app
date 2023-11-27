@@ -1,6 +1,8 @@
 # notes-app
 
-Это веб приложение, которое использует fastapi на uvicorn для бэкенда и react на astro для фронтенда.
+Это веб приложение, которое использует fastapi на uvicorn для бэкенда и react на astro для фронтенда. Данные хранятся в postgresql.
+
+Запущено [здесь](http://fupmgovno.servebeer.com:8080/)
 
 ## Установка
 
@@ -8,17 +10,19 @@
 
 1. Склонируйте репозиторий
 
-2. Установите зависимости из requirements.txt. (`pip install -r requirements.txt`)
+2. Создайте файл .env и запишите в него поля `JWT_SECRET` и `DATABASE_URL`.
 
-3. Запустите сервер (`python start.py`). Будет открыт сервер бэкенда на порте 8000.
+3. Установите зависимости из requirements.txt. (`pip install -r requirements.txt`)
 
-4. Перейдите в папку frontend.
+4. Запустите сервер (`python start.py`). Будет открыт сервер бэкенда на порте 8000.
 
-5. Установите зависимости nodejs. (`npm install`)
+5. Перейдите в папку frontend.
 
-6. Запустите сервер (`npm start`). Будет открыт сервер на порте 4321.
+6. Установите зависимости nodejs. (`npm install`)
 
-7. Добавьте в секцию http в nginx.conf сервер
+7. Запустите сервер (`npm start`). Будет открыт сервер на порте 4321.
+
+8. Добавьте в секцию http в nginx.conf сервер
 
 ```conf
 server {
@@ -55,4 +59,4 @@ server {
 }
 ```
 
-8. Запустите nginx. (`sudo systemctl start nginx`). Если он уже запущен, то `sudo nginx -s reload`. Будет открыт сервер на порте 8080, на который нужно будет зайти.
+9. Запустите nginx. (`sudo systemctl start nginx`). Если он уже запущен, то `sudo nginx -s reload`. Будет открыт сервер на порте 8080, на который нужно будет зайти.
