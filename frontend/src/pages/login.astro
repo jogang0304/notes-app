@@ -1,10 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Login from "../components/Login/Login";
+import LoginBlock from "../components/Login/Login";
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Login">
 	<main>
-		<Login client:only />
+		<LoginBlock client:only="react" />
 	</main>
 </Layout>

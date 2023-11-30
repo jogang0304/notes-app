@@ -1,10 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Register from "../components/Register/Register";
+import RegisterBlock from "../components/Register/Register";
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Register">
 	<main>
-		<Register client:only />
+		<RegisterBlock client:only="react" />
 	</main>
 </Layout>

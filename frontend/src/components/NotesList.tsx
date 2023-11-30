@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import type { Note } from "../interfaces";
 import {
   Box,
-  Button,
   CircularProgress,
-  Container,
   Divider,
   Icon,
   IconButton,
@@ -14,10 +12,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Stack,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import Item from "@mui/material/Stack";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Delete } from "@mui/icons-material";
 
@@ -103,7 +99,7 @@ function TaskList({
         disablePadding
       >
         {notes.map((note, index) => (
-          <div key={note.id}>
+          <div key={index}>
             <Box
               bgcolor={
                 currentNoteIndex === index ? "rgba(0, 162, 255, 0.13)" : "white"
@@ -116,6 +112,7 @@ function TaskList({
                     edge="end"
                     onClick={() => {
                       let token = localStorage.getItem("token");
+                      console.log(note);
                       const form = new FormData();
                       form.append("id", note.id.toString());
                       axios
@@ -175,21 +172,24 @@ function TaskList({
                   },
                 })
                 .then((response) => {
-                  setNotes((notes) => {
-                    let newNotes = [...notes];
-                    newNotes.push(response.data);
-                    setNotes(newNotes);
-                    return newNotes;
-                  });
+                  let newNotes = notes;
+                  console.log(response.data);
+                  newNotes.push(response.data);
+                  setNotes(newNotes);
+                  setCurrentNoteIndex(newNotes.length - 1);
+                  localStorage.setItem(
+                    "currentNoteIndex",
+                    (newNotes.length - 1).toString(),
+                  );
                 });
             }}
           >
+            <ListItemText primary={"New note"} />
             <ListItemIcon>
               <Icon>
                 <AddCircleOutlineIcon />
               </Icon>
             </ListItemIcon>
-            <ListItemText primary={"New note"} />
           </ListItemButton>
         </ListItem>
       </List>

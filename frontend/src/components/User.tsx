@@ -2,7 +2,6 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Item from "@mui/material/Stack";
-import { useEffect, useState } from "react";
 
 function User({ username }: { username: string }) {
   return (

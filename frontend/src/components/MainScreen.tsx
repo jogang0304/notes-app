@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
 import Item from "@mui/material/Stack";
 import User from "./User";
 import TaskList from "./NotesList";
@@ -11,6 +11,10 @@ function MainScreen() {
   const [username, setUsername] = useState<string>("");
   const [notes, setNotes] = useState<Note[]>([]);
   const [currentNoteIndex, setCurrentNoteIndex] = useState<number>(0);
+
+  useEffect(() => {
+    console.log("notes changes");
+  }, [notes]);
 
   function parseJwt(token: string): Token {
     var base64Url = token.split(".")[1];

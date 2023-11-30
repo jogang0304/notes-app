@@ -1,6 +1,6 @@
 # notes-app
 
-Это веб приложение, которое использует fastapi на uvicorn для бэкенда и react на astro для фронтенда. Данные хранятся в postgresql.
+Это веб приложение, которое использует fastapi на hypercorn для бэкенда и react на astro для фронтенда. Данные хранятся в postgresql.
 
 Запущено [здесь](http://fupmgovno.servebeer.com:8080/)
 
@@ -26,13 +26,19 @@
 
 ```conf
 server {
-	listen 8080;
-	location /api {
-		proxy_pass http://localhost:8000;
-	}
-	location / {
-		proxy_pass http://localhost:4321;
-	}
+        listen 8080;
+        location /api {
+                proxy_pass http://localhost:8000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+        }
+        location / {
+                proxy_pass http://localhost:4321;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+        }
 }
 ```
 
@@ -40,20 +46,36 @@ server {
 
 ```conf
 events{
-	worker_connections 1024;
+        worker_connections 1024;
 }
 
 
 http {
 
+map $http_upgrade $connection_upgrade {
+	default upgrade;
+	'' close;
+}
+
+upstream websocket {
+    server localhost:4321;
+}
+
+
 server {
-	listen 8080;
-	location /api {
-		proxy_pass http://localhost:8000;
-	}
-	location / {
-		proxy_pass http://localhost:4321;
-	}
+        listen 8080;
+        location /api {
+                proxy_pass http://localhost:8000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+        }
+        location / {
+                proxy_pass http://localhost:4321;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+        }
 }
 
 }

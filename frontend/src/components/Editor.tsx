@@ -53,17 +53,18 @@ function Editor({
       notes[parseInt(localStorage.getItem("currentNoteIndex") ?? "0")];
     console.log(initialNote);
     let token = localStorage.getItem("token");
-    const note = editor_ref.current?.getMarkdown();
-    if (note === undefined) {
+    const note_text = editor_ref.current?.getMarkdown();
+    if (note_text === undefined) {
       return;
     }
-    const firstLine = note.split("\n")[0];
+    const firstLine = note_text.split("\n")[0];
     const newNote: Note = {
       id: initialNote.id,
       title: firstLine,
-      text: note,
+      text: note_text,
       owner_id: initialNote.owner_id,
     };
+    console.log(newNote);
     const form = new FormData();
     form.append("note_json", JSON.stringify(newNote));
     axios
@@ -73,13 +74,10 @@ function Editor({
         },
       })
       .then((response) => {
-        setNotes((notes) => {
-          let newNotes = [...notes];
-          console.log(newNotes);
-          newNotes[notes.findIndex((note) => note.id === initialNote.id)] =
-            newNote;
-          return newNotes;
-        });
+        let newNotes = notes;
+        newNotes[notes.findIndex((note) => note.id === initialNote.id)] =
+          response.data;
+        setNotes(newNotes);
       });
   }
 
