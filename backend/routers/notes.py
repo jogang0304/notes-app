@@ -1,7 +1,9 @@
+import io
 import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, Header, HTTPException
+from fastapi.responses import StreamingResponse
 
 import backend.database as database
 from backend.helpers.jwt import JWTHelper
@@ -100,3 +102,24 @@ async def change_note(
     if changed_note is None:
         raise HTTPException(status_code=404, detail="Invalid note id or username")
     return changed_note
+
+
+@router.post("/download/", response_class=StreamingResponse)
+async def download_note(
+    token: Annotated[str, Header()],
+    id: Annotated[int, Form()],
+    db: database.Session = Depends(database.get_db),
+):
+    verified_token = JWTHelper().verify(token)
+    if verified_token is None:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    db_note = await database.get_note(id, verified_token.username, db)
+    if db_note is None:
+        raise HTTPException(status_code=404, detail="Invalid id or username")
+    inmemoryFile = io.StringIO(str(db_note.text))
+    inmemoryFile.name = db_note.title + ".md"
+    inmemoryFile.seek(0)
+    headers = {
+        "Content-Disposition": "attachment; filename={}".format(db_note.title + ".md")
+    }
+    return StreamingResponse(inmemoryFile, media_type="text/markdown", headers=headers)

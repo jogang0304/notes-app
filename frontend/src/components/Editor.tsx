@@ -83,6 +83,41 @@ function Editor({
       });
   }
 
+  function downloadNote() {
+    const cur_index = localStorage.getItem("currentNoteIndex");
+    if (cur_index === null) {
+      return;
+    }
+    const current_note = notes[parseInt(cur_index)];
+    let token = localStorage.getItem("token");
+    const form = new FormData();
+    form.append("id", current_note.id.toString());
+    console.log(current_note.id);
+    axios
+      .post("/api/notes/download", form, {
+        headers: {
+          token: token,
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        const href = window.URL.createObjectURL(response.data);
+
+        const anchorElement = document.createElement("a");
+
+        anchorElement.href = href;
+        anchorElement.download =
+          response.headers["content-disposition"].split("filename=")[1];
+
+        document.body.appendChild(anchorElement);
+        anchorElement.click();
+
+        document.body.removeChild(anchorElement);
+        window.URL.revokeObjectURL(href);
+        console.log(response);
+      });
+  }
+
   return (
     <Box height={"100%"}>
       <Paper sx={{ height: "100%" }} elevation={5}>
@@ -107,7 +142,8 @@ function Editor({
                     <InsertTable />
                     <InsertCodeBlock />
                   </Item>
-                  <Item>
+                  <Item direction={"row"} spacing={2}>
+                    <Button onClick={downloadNote}>Download</Button>
                     <Button onClick={changeNote}>Save</Button>
                   </Item>
                 </Stack>

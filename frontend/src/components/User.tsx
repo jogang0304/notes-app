@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 
 function User({ username }: { username: string }) {
   return (
-    <Paper elevation={5}>
+    <Paper elevation={5} sx={{ height: "100%" }}>
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem />}
         spacing={0}
-        height="5vh"
+        height={"100%"}
         alignItems={"center"}
       >
         <Item width={"100%"}>

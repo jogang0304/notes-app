@@ -92,20 +92,24 @@ function TaskList({
       sx={{
         height: "100%",
         width: "100%",
-        overflow: "auto",
-        maxHeight: "91vh",
+        overflow: "hidden",
+        //maxHeight: "91vh",
+        boxSizing: "border-box",
+        padding: 0,
       }}
     >
-      <List>
+      <List
+        sx={{ maxHeight: "100%", overflow: "auto", boxSizing: "border-box" }}
+        disablePadding
+      >
         {notes.map((note, index) => (
-          <>
+          <div key={note.id}>
             <Box
               bgcolor={
                 currentNoteIndex === index ? "rgba(0, 162, 255, 0.13)" : "white"
               }
             >
               <ListItem
-                key={note.id}
                 disablePadding
                 secondaryAction={
                   <IconButton
@@ -155,7 +159,7 @@ function TaskList({
               </ListItem>
             </Box>
             <Divider />
-          </>
+          </div>
         ))}
         <ListItem>
           <ListItemButton

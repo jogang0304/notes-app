@@ -1,10 +1,13 @@
+import asyncio
+
 import dotenv
-import uvicorn
+from hypercorn.asyncio import serve
+from hypercorn.config import Config
 
 dotenv.load_dotenv()
 from backend import app
 
 if __name__ == "__main__":
-    config = uvicorn.Config(app, port=8000, log_level="info")
-    server = uvicorn.Server(config)
-    server.run()
+    config = Config()
+    config.bind = ["localhost:8000"]
+    asyncio.run(serve(app, config))

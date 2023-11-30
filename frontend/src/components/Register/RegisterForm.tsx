@@ -45,6 +45,7 @@ function RegisterForm() {
         ></TextField>
         <TextField
           label="Password"
+          type="password"
           variant="outlined"
           onChange={(event) => {
             setPassword(event?.target.value);

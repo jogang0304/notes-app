@@ -1,4 +1,4 @@
-import { Grid, Stack } from "@mui/material";
+import { Box, Container, Grid, Stack } from "@mui/material";
 import Item from "@mui/material/Stack";
 import User from "./User";
 import TaskList from "./NotesList";
@@ -51,20 +51,26 @@ function MainScreen() {
 
   return (
     <Grid container sx={{ height: "100vh" }} spacing={1} padding={1}>
-      <Grid item xs={3}>
-        <Stack spacing={1} height={"100%"}>
-          <Item>
-            <User username={username} />
-          </Item>
-          <Item height={"100%"}>
-            <TaskList
-              notes={notes}
-              setNotes={setNotes}
-              setCurrentNoteIndex={setCurrentNoteIndex}
-              currentNoteIndex={currentNoteIndex}
-            />
-          </Item>
-        </Stack>
+      <Grid item xs={3} maxHeight={"100vh"} sx={{ display: "block" }}>
+        <Box sx={{ height: "100%", display: "block", boxSizing: "border-box" }}>
+          <Stack spacing={1} height={"100%"} boxSizing={"border-box"}>
+            <Item height={"5vh"} boxSizing={"border-box"}>
+              <User username={username} />
+            </Item>
+            <Item
+              sx={{ flexGrow: 1 }}
+              maxHeight={"92vh"}
+              boxSizing={"border-box"}
+            >
+              <TaskList
+                notes={notes}
+                setNotes={setNotes}
+                setCurrentNoteIndex={setCurrentNoteIndex}
+                currentNoteIndex={currentNoteIndex}
+              />
+            </Item>
+          </Stack>
+        </Box>
       </Grid>
       <Grid item xs={9}>
         <Editor

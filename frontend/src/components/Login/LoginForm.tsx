@@ -1,4 +1,4 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, TextField, Typography, Input } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import axios from "axios";
@@ -46,6 +46,7 @@ function LoginForm() {
         <TextField
           label="Password"
           variant="outlined"
+          type="password"
           onChange={(event) => {
             setPassword(event?.target.value);
           }}
