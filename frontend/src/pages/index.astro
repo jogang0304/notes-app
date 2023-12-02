@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MainScreen from "../components/MainScreen.tsx";
+---
+
+<Layout title="Notes app">
+	<main>
+		<MainScreen client:only="react"/>
+	</main>
+</Layout>

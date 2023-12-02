@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LoginBlock from "../components/Login/Login";
+---
+
+<Layout title="Login">
+	<main>
+		<LoginBlock client:only="react" />
+	</main>
+</Layout>
